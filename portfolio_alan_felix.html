@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alan Félix — Controller & Analista de Processos</title>
+<meta name="description" content="Portfolio de Alan Félix — Controller e Analista de Processos especializado em Power BI, SQL e automação.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #080909;
+  --bg2:      #0e1011;
+  --bg3:      #141718;
+  --border:   #1e2326;
+  --accent:   #e87c2e;
+  --accent2:  #f0a55a;
+  --text:     #edeae4;
+  --text2:    #8a8880;
+  --text3:    #3d3d3b;
+  --green:    #4ade80;
+  --blue:     #60a5fa;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  background: rgba(8,9,9,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.nav-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  color: var(--text2);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(232,124,46,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,124,46,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,124,46,0.08) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  max-width: 900px;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.6s 0.2s forwards;
+}
+
+.hero-tag::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--accent);
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 10vw, 140px);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.3s forwards;
+}
+
+.hero h1 span {
+  color: var(--accent);
+  display: block;
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--text2);
+  font-weight: 300;
+  max-width: 520px;
+  margin: 28px 0 48px;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.5s forwards;
+}
+
+.hero-sub strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s 0.7s forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--accent2);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 40px;
+  left: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.7s 1s forwards;
+}
+
+.hero-scroll::after {
+  content: '';
+  width: 40px; height: 1px;
+  background: var(--text3);
+}
+
+/* ── ABOUT ── */
+.about {
+  padding: 120px 48px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::before {
+  content: '';
+  width: 20px; height: 1px;
+  background: var(--accent);
+}
+
+.about h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+}
+
+.about p {
+  color: var(--text2);
+  font-weight: 300;
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+.about p strong { color: var(--text); font-weight: 500; }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.skill-item {
+  padding: 16px 20px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+
+.skill-item:hover { border-color: rgba(232,124,46,0.3); }
+
+.skill-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.skill-desc {
+  font-size: 12px;
+  color: var(--text2);
+}
+
+/* ── PROJECTS ── */
+.projects {
+  padding: 80px 48px 120px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.projects-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 60px;
+}
+
+.projects h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+.project-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 2px;
+  background: var(--bg2);
+  transition: border-color 0.3s;
+}
+
+.project-card:hover { border-color: rgba(232,124,46,0.25); }
+
+.project-card.featured {
+  border-color: rgba(232,124,46,0.2);
+  margin-bottom: 24px;
+}
+
+/* FEATURED PROJECT */
+.project-featured-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.project-info {
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.project-year {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.project-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  background: rgba(232,124,46,0.1);
+  border: 1px solid rgba(232,124,46,0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.project-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+}
+
+.project-desc {
+  font-size: 14px;
+  color: var(--text2);
+  font-weight: 300;
+  line-height: 1.7;
+  margin-bottom: 32px;
+  flex: 1;
+}
+
+.project-problem {
+  padding: 16px 20px;
+  background: rgba(232,124,46,0.05);
+  border-left: 2px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--text2);
+  font-style: italic;
+}
+
+.project-problem strong {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text2);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+.project-links {
+  display: flex;
+  gap: 12px;
+}
+
+.project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.project-link.primary {
+  background: var(--accent);
+  color: #000;
+}
+
+.project-link.primary:hover { background: var(--accent2); }
+
+.project-link.secondary {
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+
+.project-link.secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* SCREENSHOTS MOSAIC */
+.project-screenshots {
+  background: var(--bg3);
+  padding: 24px;
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 8px;
+  border-left: 1px solid var(--border);
+}
+
+.screenshot-main {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  display: block;
+  object-fit: cover;
+  height: 240px;
+}
+
+.screenshot-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.screenshot-thumb {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  display: block;
+  object-fit: cover;
+  height: 120px;
+}
+
+/* METRICS */
+.project-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--border);
+}
+
+.metric {
+  padding: 24px 28px;
+  border-right: 1px solid var(--border);
+}
+
+.metric:last-child { border-right: none; }
+
+.metric-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-label {
+  font-size: 12px;
+  color: var(--text2);
+  font-weight: 300;
+}
+
+/* FLOW */
+.project-flow {
+  padding: 32px 48px;
+  border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.2);
+}
+
+.flow-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.flow-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.flow-step-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(232,124,46,0.15);
+  border: 1px solid rgba(232,124,46,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.flow-arrow {
+  color: var(--text3);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* COMING SOON CARD */
+.project-coming {
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.project-coming:hover { opacity: 0.7; }
+
+.coming-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--text2);
+  letter-spacing: 0.04em;
+}
+
+.coming-sub {
+  font-size: 13px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+.coming-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.08em;
+}
+
+/* ── CONTACT ── */
+.contact {
+  border-top: 1px solid var(--border);
+  padding: 120px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-glow {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(232,124,46,0.06) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.contact h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 96px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.contact p {
+  font-size: 16px;
+  color: var(--text2);
+  font-weight: 300;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  position: relative;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+}
+
+.footer-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.06em;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── LIGHTBOX ── */
+.lb-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+.lb-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.lb-img-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lb-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+.lb-close {
+  position: fixed;
+  top: 16px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 40px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  z-index: 1001;
+  padding: 4px;
+}
+.lb-close:hover { opacity: 1; }
+.lb-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 56px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+  z-index: 1001;
+  padding: 16px;
+}
+.lb-arrow:hover { opacity: 1; }
+.lb-prev { left: 0; }
+.lb-next { right: 0; }
+.lb-counter {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
+  letter-spacing: 0.12em;
+  z-index: 1001;
+  pointer-events: none;
+}
+.screenshot-main,
+.screenshot-thumb {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.screenshot-main:hover,
+.screenshot-thumb:hover { opacity: 0.85; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .hero-scroll { left: 24px; }
+  .about { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
+  .projects { padding: 40px 24px 80px; }
+  .projects-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .project-featured-inner { grid-template-columns: 1fr; }
+  .project-screenshots { display: none; }
+  .project-metrics { grid-template-columns: 1fr 1fr; }
+  .project-flow { padding: 24px; }
+  .contact { padding: 80px 24px; }
+  footer { padding: 20px 24px; flex-direction: column; gap: 8px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">AF · Portfolio</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#projetos">Projetos</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Controller & Analista de Processos</div>
+    <h1>Alan<span>Félix</span></h1>
+    <p class="hero-sub">
+      Otimizando a gestão financeira e administrativa através de
+      <strong>Power BI</strong>, <strong>SQL</strong> e
+      <strong>automação de processos</strong>.<br>
+      Transformo problemas operacionais em sistemas que funcionam.
+    </p>
+    <div class="hero-actions">
+      <a href="#projetos" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Ver Projetos
+      </a>
+      <a href="https://www.linkedin.com/in/alansfelix/" target="_blank" class="btn-ghost">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="sobre">
+  <div class="reveal">
+    <div class="section-label">Sobre</div>
+    <h2>Gestão que<br>gera resultado</h2>
+    <p>
+      Atuo como <strong>Controller e Analista de Processos</strong> com foco em transformar fluxos manuais, fragmentados e dependentes de planilhas em sistemas estruturados, rastreáveis e escaláveis.
+    </p>
+    <p>
+      Minha abordagem é <strong>orientada ao negócio</strong>: entendo o problema operacional antes de qualquer solução técnica. O resultado são processos mais ágeis, dados confiáveis e decisões melhores.
+    </p>
+    <p>
+      Experiência em facilities, empresas de terceirização e empresas industriais de médio porte, atuando na interface entre operação, financeiro e tecnologia.
+    </p>
+  </div>
+  <div class="reveal" style="transition-delay: 0.15s">
+    <div class="section-label">Ferramentas</div>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <div class="skill-name">Power BI</div>
+        <div class="skill-desc">Dashboards financeiros e operacionais</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">SQL</div>
+        <div class="skill-desc">PostgreSQL · Supabase · análise de dados</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">React & Vite</div>
+        <div class="skill-desc">Sistemas web internos e dashboards</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Power Automate</div>
+        <div class="skill-desc">Automação de fluxos e notificações</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Excel Avançado</div>
+        <div class="skill-desc">Modelos financeiros e Power Query</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">DAX & M</div>
+        <div class="skill-desc">Modelagem dimensional · ETL</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projetos">
+  <div class="projects-header reveal">
+    <div>
+      <div class="section-label">Projetos</div>
+      <h2>Cases reais,<br>impacto real</h2>
+    </div>
+  </div>
+
+  <!-- FEATURED: SISTEMA DE REQUISIÇÕES -->
+  <div class="project-card featured reveal">
+    <div class="project-featured-inner">
+
+      <!-- INFO -->
+      <div class="project-info">
+        <div>
+          <div class="project-meta">
+            <span class="project-year">2026</span>
+            <span class="project-type">Sistema Web · Full-Stack</span>
+          </div>
+          <div class="project-title">Sistema de<br>Requisições</div>
+
+          <div class="project-problem">
+            <strong>O problema:</strong> Solicitações de materiais via WhatsApp, sem rastreabilidade, sem histórico de preços, sem controle de quem aprovou o quê. O processo dependia de memória e boa vontade.
+          </div>
+
+          <p class="project-desc">
+            Desenvolvi do zero um sistema completo de gestão de requisições de materiais para uma empresa industrial. O sistema substitui um fluxo caótico de WhatsApp + planilhas por um processo estruturado, rastreável e auditável — com geração automática de PDFs, aprovações por item e notificações em tempo real.
+          </p>
+
+          <div class="project-tags">
+            <span class="tag">React</span>
+            <span class="tag">Supabase</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">Vite</span>
+            <span class="tag">jsPDF</span>
+            <span class="tag">Power Automate</span>
+            <span class="tag">Vercel</span>
+            <span class="tag">WhatsApp API</span>
+          </div>
+        </div>
+
+        <div class="project-links">
+          <a href="https://material-request-system.vercel.app/" target="_blank" class="project-link primary">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Demo ao vivo
+          </a>
+          <a href="https://www.linkedin.com/in/alansfelix/" target="_blank" class="project-link secondary">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+            Código sob solicitação
+          </a>
+        </div>
+      </div>
+
+      <!-- SCREENSHOTS -->
+      <div class="project-screenshots">
+        <img
+          src="https://i.ibb.co/yFCxSHpf/1.jpg"
+          alt="Painel de requisições"
+          class="screenshot-main"
+          onclick="openLightbox(0)"
+        />
+        <div class="screenshot-row">
+          <img
+            src="https://i.ibb.co/HpgJhL1D/3.jpg"
+            alt="Responder cotação"
+            class="screenshot-thumb"
+            onclick="openLightbox(1)"
+          />
+          <img
+            src="https://i.ibb.co/p6WmjTzq/4.jpg"
+            alt="Pedidos de compra"
+            class="screenshot-thumb"
+            onclick="openLightbox(2)"
+          />
+            <img
+            src="https://i.ibb.co/p6WwL6GG/2.jpg"
+            alt="Nova Requisição"
+            class="screenshot-thumb"
+            onclick="openLightbox(3)"
+          />
+            <img
+            src="https://i.ibb.co/tTMBFZ6C/5.jpg"
+            alt="Painel de Aprovações"
+            class="screenshot-thumb"
+            onclick="openLightbox(4)"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- METRICS -->
+    <div class="project-metrics">
+      <div class="metric">
+        <div class="metric-value">5</div>
+        <div class="metric-label">Módulos integrados</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">4</div>
+        <div class="metric-label">Perfis de acesso</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">100%</div>
+        <div class="metric-label">Rastreabilidade</div>
+      </div>
+      <div class="metric">
+        <div class="metric-value">0</div>
+        <div class="metric-label">Planilhas no fluxo</div>
+      </div>
+    </div>
+
+    <!-- FLOW -->
+    <div class="project-flow">
+      <div class="flow-title">Fluxo implementado</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          Solicitação + PDF
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          Cotação por item
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          Aprovação granular
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          Pedido de compra
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-num">5</div>
+          Recebimento + notificação
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMING SOON -->
+  <div class="project-coming reveal">
+    <div>
+      <div class="coming-text">Dashboard Financeiro · Power BI</div>
+      <div class="coming-sub">Controle de projetos, despesas realizadas e contratos — em breve</div>
+    </div>
+    <div class="coming-badge">Em desenvolvimento</div>
+  </div>
+
+  <div class="project-coming reveal" style="transition-delay: 0.1s">
+    <div>
+      <div class="coming-text">Sistema de Adiantamentos</div>
+      <div class="coming-sub">Fluxo de aprovação via token + Power Automate — em breve</div>
+    </div>
+    <div class="coming-badge">Em breve</div>
+  </div>
+
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contato">
+  <div class="contact-glow"></div>
+  <div class="section-label" style="justify-content: center; margin-bottom: 24px;">Contato</div>
+  <h2 class="reveal">Vamos<br>conversar?</h2>
+  <p class="reveal">Aberto a oportunidades, projetos e trocas de ideia.</p>
+  <div class="contact-links reveal">
+    <a href="https://www.linkedin.com/in/alansfelix/" target="_blank" class="btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 Alan Félix</div>
+  <div class="footer-tag">Controller · Analista de Processos</div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lb-overlay" id="lightbox" onclick="lbClickOutside(event)">
+  <button class="lb-close" onclick="closeLightbox()">×</button>
+  <button class="lb-arrow lb-prev" onclick="lbNav(-1)">‹</button>
+  <div class="lb-img-wrap">
+    <img class="lb-img" id="lb-img" src="" alt="">
+  </div>
+  <button class="lb-arrow lb-next" onclick="lbNav(1)">›</button>
+  <div class="lb-counter" id="lb-counter">1 / 5</div>
+</div>
+
+<script>
+// Lightbox
+const lbImages = [
+  { src: 'https://i.ibb.co/yFCxSHpf/1.jpg',   alt: 'Painel de requisições' },
+  { src: 'https://i.ibb.co/HpgJhL1D/3.jpg',   alt: 'Responder cotação' },
+  { src: 'https://i.ibb.co/p6WmjTzq/4.jpg',   alt: 'Pedidos de compra' },
+  { src: 'https://i.ibb.co/p6WwL6GG/2.jpg',   alt: 'Nova Requisição' },
+  { src: 'https://i.ibb.co/tTMBFZ6C/5.jpg',   alt: 'Painel de Aprovações' },
+]
+let lbIndex = 0
+
+function openLightbox(idx) {
+  lbIndex = idx
+  lbRender()
+  document.getElementById('lightbox').classList.add('active')
+  document.body.style.overflow = 'hidden'
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active')
+  document.body.style.overflow = ''
+}
+
+function lbNav(dir) {
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length
+  lbRender()
+}
+
+function lbRender() {
+  const img = document.getElementById('lb-img')
+  const counter = document.getElementById('lb-counter')
+  img.src = lbImages[lbIndex].src
+  img.alt = lbImages[lbIndex].alt
+  counter.textContent = (lbIndex + 1) + ' / ' + lbImages.length
+}
+
+function lbClickOutside(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightbox()
+}
+
+document.addEventListener('keydown', function(e) {
+  const lb = document.getElementById('lightbox')
+  if (!lb.classList.contains('active')) return
+  if (e.key === 'Escape')      closeLightbox()
+  if (e.key === 'ArrowLeft')   lbNav(-1)
+  if (e.key === 'ArrowRight')  lbNav(1)
+})
+</script>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible')
+      observer.unobserve(e.target)
+    }
+  })
+}, { threshold: 0.1 })
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+
+// Smooth nav
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'))
+    if (target) {
+      e.preventDefault()
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
+  })
+})
+</script>
+
+</body>
+</html>
